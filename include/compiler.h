@@ -125,7 +125,7 @@ typedef unsigned int uint;
 #include <stdint.h>
 #else
 /* Type for `void *' pointers. */
-typedef unsigned long int uintptr_t;
+//typedef unsigned long int uintptr_t;
 #endif
 
 #include <linux/string.h>

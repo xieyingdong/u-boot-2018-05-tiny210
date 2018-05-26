@@ -1,0 +1,15 @@
+if TARGET_TINY210
+
+config SYS_BOARD
+	default "tiny210"
+
+config SYS_VENDOR
+	default "samsung"
+
+config SYS_SOC
+	default "s5pv2xx"
+
+config SYS_CONFIG_NAME
+	default "tiny210"
+
+endif

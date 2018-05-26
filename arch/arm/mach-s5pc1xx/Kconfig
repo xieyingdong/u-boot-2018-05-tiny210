@@ -12,6 +12,11 @@ config TARGET_SMDKC100
 	bool "Support smdkc100 board"
 	select OF_CONTROL
 
+config TARGET_TINY210
+	bool "Support tiny210 board"
+	select OF_CONTROL
+	select SUPPORT_SPL
+
 endchoice
 
 config SYS_SOC
@@ -19,5 +24,6 @@ config SYS_SOC
 
 source "board/samsung/goni/Kconfig"
 source "board/samsung/smdkc100/Kconfig"
+source "board/samsung/tiny210/Kconfig"
 
 endif

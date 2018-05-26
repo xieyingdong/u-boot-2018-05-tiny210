@@ -1,0 +1,6 @@
+TINY210 BOARD
+M:	Minkyu Kang <mk7.kang@samsung.com>
+S:	Maintained
+F:	board/samsung/tiny210/
+F:	include/configs/tiny210.h
+F:	configs/tiny210_defconfig

@@ -315,7 +315,7 @@ int spl_init(void)
 
 __weak void board_boot_order(u32 *spl_boot_list)
 {
-	spl_boot_list[0] = spl_boot_device();
+	//spl_boot_list[0] = spl_boot_device();
 }
 
 static struct spl_image_loader *spl_ll_find_loader(uint boot_device)
@@ -402,14 +402,15 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
 #endif
 	if (!(gd->flags & GD_FLG_SPL_INIT)) {
 		if (spl_init())
-			hang();
+			;
+			//hang();
 	}
 #if !defined(CONFIG_PPC) && !defined(CONFIG_ARCH_MX6)
 	/*
 	 * timer_init() does not exist on PPC systems. The timer is initialized
 	 * and enabled (decrementer) in interrupt_init() here.
 	 */
-	timer_init();
+	//timer_init();
 #endif
 
 #if CONFIG_IS_ENABLED(BOARD_INIT)
@@ -425,7 +426,7 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
 	if (boot_from_devices(&spl_image, spl_boot_list,
 			      ARRAY_SIZE(spl_boot_list))) {
 		puts("SPL: failed to boot from all boot devices\n");
-		hang();
+		//hang();
 	}
 
 #ifdef CONFIG_CPU_V7M
