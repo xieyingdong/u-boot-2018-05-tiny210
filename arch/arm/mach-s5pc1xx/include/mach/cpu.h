@@ -45,6 +45,22 @@
 #define S5PC110_PHY_BASE	0xEC100000
 #define S5PC110_USB_PHY_CONTROL 0xE010E80C
 
+/* S5PV210 add by shl */
+#define S5PV210_PRO_ID		0xE0000000
+#define S5PV210_CLOCK_BASE	0xE0100000
+#define S5PV210_GPIO_BASE	0xE0200000
+#define S5PV210_PWMTIMER_BASE	0xE2500000
+#define S5PV210_WATCHDOG_BASE	0xE2700000
+#define S5PV210_UART_BASE	0xE2900000
+#define S5PV210_SROMC_BASE	0xE8000000
+#define S5PV210_MMC_BASE	0xEB000000
+#define S5PV210_DMC0_BASE	0xF0000000
+#define S5PV210_DMC1_BASE	0xF1400000
+#define S5PV210_VIC0_BASE	0xF2000000
+#define S5PV210_VIC1_BASE	0xF2100000
+#define S5PV210_VIC2_BASE	0xF2200000
+#define S5PV210_VIC3_BASE	0xF2300000
+#define S5PV210_NAND_BASE       0xB0E00000
 
 #ifndef __ASSEMBLY__
 #include <asm/io.h>
@@ -78,16 +94,17 @@ static inline int cpu_is_##type(void)			\
 IS_SAMSUNG_TYPE(s5pc100, 0xc100)
 IS_SAMSUNG_TYPE(s5pc110, 0xc110)
 
+/*modied by shl*/
 #define SAMSUNG_BASE(device, base)				\
 static inline unsigned int samsung_get_base_##device(void)	\
 {								\
-	if (cpu_is_s5pc100())					\
-		return S5PC100_##base;				\
-	else if (cpu_is_s5pc110())				\
-		return S5PC110_##base;				\
-	else							\
-		return 0;					\
+		return S5PV210_##base;				\
 }
+
+/*add by shl*/
+SAMSUNG_BASE(dmc0, DMC0_BASE)
+SAMSUNG_BASE(dmc1, DMC1_BASE)
+SAMSUNG_BASE(nand, NAND_BASE)
 
 SAMSUNG_BASE(clock, CLOCK_BASE)
 SAMSUNG_BASE(gpio, GPIO_BASE)

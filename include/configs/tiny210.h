@@ -27,7 +27,7 @@
 #define CONFIG_SYS_CLK_FREQ		12000000
 
 /* DRAM Base */
-#define CONFIG_SYS_SDRAM_BASE		0x30000000
+#define CONFIG_SYS_SDRAM_BASE		0x20000000
 
 /* Text Base */
 

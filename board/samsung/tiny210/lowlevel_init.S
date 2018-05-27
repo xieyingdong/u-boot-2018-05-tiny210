@@ -23,6 +23,10 @@ lowlevel_init:
 	bl clock_init
 	/* for UART */
 	bl uart_asm_init
+	/* for SDRAM*/
+#ifdef CONFIG_SPL_BUILD
+	bl ddr_init
+#endif
 
 	mov	lr, r9
 	mov	pc, lr
@@ -154,16 +158,12 @@ uart_asm_init:
 
 	ldr	r1, =0x1
 	str	r1, [r0, #UDIVSLOT_OFFSET]
-send:
+
 	ldr	r1, =0x4f
 	str	r1, [r0, #UTXH_OFFSET]		@'O'
 
 	ldr	r1, =0x4b
 	str	r1, [r0, #UTXH_OFFSET]		@'K'
-
-	ldr	r1, =0x0a
-	str	r1, [r0, #UTXH_OFFSET]		@'K'
-	b send
 
 	mov pc, lr
 

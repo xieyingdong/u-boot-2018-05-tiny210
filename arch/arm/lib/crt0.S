@@ -69,10 +69,12 @@ ENTRY(_main)
  * Set up initial C runtime environment and call board_init_f(0).
  */
 
-#if defined(CONFIG_SPL_BUILD) && defined(CONFIG_SPL_STACK)
-	ldr	r0, =(CONFIG_SPL_STACK)
-#else
+#if !defined(CONFIG_SPL_BUILD)
 	ldr	r0, =(CONFIG_SYS_INIT_SP_ADDR)
+#endif
+#if defined(CONFIG_SPL_BUILD)
+	bl copy_bl2_to_ram
+	ldr pc, =CONFIG_SYS_SDRAM_BASE
 #endif
 	bic	r0, r0, #7	/* 8-byte alignment for ABI compliance */
 	mov	sp, r0
