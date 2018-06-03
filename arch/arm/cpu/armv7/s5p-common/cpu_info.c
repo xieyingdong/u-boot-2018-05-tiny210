@@ -35,14 +35,7 @@ int print_cpuinfo(void)
 	const char *cpu_model;
 	int len;
 
-	/* For SoC with no real CPU ID in naming convention. */
-	cpu_model = fdt_getprop(gd->fdt_blob, 0, "cpu-model", &len);
-	if (cpu_model)
-		printf("CPU:   %.*s @ ", len, cpu_model);
-	else
-		printf("CPU:   %s%X @ ", s5p_get_cpu_name(), s5p_cpu_id);
-
-	print_freq(get_arm_clk(), "\n");
+	printf("CPU:   %s210\n", s5p_get_cpu_name());
 
 	return 0;
 }

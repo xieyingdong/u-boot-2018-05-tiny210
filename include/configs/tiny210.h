@@ -34,6 +34,13 @@
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_CMDLINE_TAG
 #define CONFIG_INITRD_TAG
+#define CONFIG_CMD_EEPROM
+#define CONFIG_SYS_DEF_EEPROM_ADDR 0x58
+#define CONFIG_CMD_DEMO
+#define CONFIG_DM_DEMO_SIMPLE
+
+#define COFNIG_CMDLINE_EDITING
+#define CONFIG_AUTO_COMPLETE
 
 /*
  * Size of malloc() pool
@@ -54,6 +61,8 @@
 
 #define CONFIG_MTD_DEVICE
 #define CONFIG_MTD_PARTITIONS
+#define CONFIG_ENV_IS_IN_EEPROM
+#define CONFIG_SYS_I2C_EEPROM_ADDR_LEN 1
 
 #define CONFIG_BOOTCOMMAND	"run ubifsboot"
 
@@ -123,7 +132,7 @@
 /* SMDKC100 has 1 banks of DRAM, we use only one in U-Boot */
 #define CONFIG_NR_DRAM_BANKS	1
 #define PHYS_SDRAM_1		CONFIG_SYS_SDRAM_BASE	/* SDRAM Bank #1 */
-#define PHYS_SDRAM_1_SIZE	(128 << 20)	/* 0x8000000, 128 MB Bank #1 */
+#define PHYS_SDRAM_1_SIZE	(512 << 20)	/* 0x25A00000, 512 MB Bank #1 */
 
 #define CONFIG_SYS_MONITOR_BASE	0x00000000
 
@@ -154,13 +163,25 @@
 #define CONFIG_SAMSUNG_ONENAND		1
 #define CONFIG_SYS_ONENAND_BASE		0xE7100000
 
-#define CONFIG_SYS_INIT_SP_ADDR	(CONFIG_SYS_LOAD_ADDR - 0x1000000)
+#define CONFIG_SYS_INIT_SP_ADDR	(CONFIG_SYS_LOAD_ADDR + PHYS_SDRAM_1_SIZE) /*modied by xyd*/
 
 /*
  * Ethernet Contoller driver
  */
 #ifdef CONFIG_CMD_NET
-#define CONFIG_ENV_SROM_BANK   3       /* Select SROM Bank-3 for Ethernet*/
+
+/* modified by xyd */
+#define CONFIG_ENV_SROM_BANK   1       /* Select SROM Bank-1 for Ethernet*/
+
+#define CONFIG_DRIVER_DM9000
+#define CONFIG_DM9000_NO_SROM
+#define CONFIG_DM9000_BASE       0X88000000
+#define DM9000_IO                (CONFIG_DM9000_BASE)
+#define DM9000_DATA              (CONFIG_DM9000_BASE + 0x4)
+#define CONFIG_CMD_PING
 #endif /* CONFIG_CMD_NET */
+
+
+#define CONFIG_BAUDRATE        115200
 
 #endif	/* __CONFIG_H */

@@ -20,6 +20,7 @@ DECLARE_GLOBAL_DATA_PTR;
 /*
  * Miscellaneous platform dependent initialisations
  */
+#if 0
 static void smc9115_pre_init(void)
 {
 	u32 smc_bw_conf, smc_bc_conf;
@@ -36,10 +37,25 @@ static void smc9115_pre_init(void)
 	/* Select and configure the SROMC bank */
 	s5p_config_sromc(CONFIG_ENV_SROM_BANK, smc_bw_conf, smc_bc_conf);
 }
+#endif
+
+/* add by xyd */
+static void dm9000_pre_init(void)
+{
+	u32 smc_bw_conf, smc_bc_conf;
+
+	smc_bw_conf = SMC_DATA16_WIDTH(CONFIG_ENV_SROM_BANK)
+			| SMC_BYTE_ADDR_MODE(CONFIG_ENV_SROM_BANK);
+	smc_bc_conf = SMC_BC_TACS(0) | SMC_BC_TCOS(1) | SMC_BC_TACC(2)
+			| SMC_BC_TCOH(1) | SMC_BC_TAH(0) | SMC_BC_TACP(0) | SMC_BC_PMC(0);
+
+	s5p_config_sromc(CONFIG_ENV_SROM_BANK, smc_bw_conf, smc_bc_conf);
+}
 
 int board_init(void)
 {
-	smc9115_pre_init();
+	//smc9115_pre_init();
+	dm9000_pre_init();
 
 	gd->bd->bi_arch_number = MACH_TYPE_TINY210;
 	gd->bd->bi_boot_params = PHYS_SDRAM_1 + 0x100;
@@ -65,16 +81,19 @@ int dram_init_banksize(void)
 #ifdef CONFIG_DISPLAY_BOARDINFO
 int checkboard(void)
 {
-	printf("Board:\tSMDKC100\n");
+	printf("Board:\tTINY210\n");
 	return 0;
 }
 #endif
+
 
 int board_eth_init(bd_t *bis)
 {
 	int rc = 0;
 #ifdef CONFIG_SMC911X
 	rc = smc911x_initialize(0, CONFIG_SMC911X_BASE);
+#elif defined(CONFIG_DRIVER_DM9000)
+	rc = dm9000_initialize(bis);
 #endif
 	return rc;
 }
@@ -183,7 +202,7 @@ void copy_bl2_to_ram(void)
 	else if (V210_SDMMC_BASE == 0xEB200000)	// 通道2
 		ch = 2;
 	
-	CopySDMMCtoMem(ch, 32, 400, (unsigned int *)CONFIG_SYS_SDRAM_BASE, 0);
+	CopySDMMCtoMem(ch, 32, 600, (unsigned int *)CONFIG_SYS_SDRAM_BASE, 0);
 }
 
 #endif /*CONFIG_SPL_BUILD (add by shl)*/
