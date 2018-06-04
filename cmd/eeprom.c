@@ -141,10 +141,10 @@ static int eeprom_rw_block(unsigned offset, uchar *addr, unsigned alen,
 	i2c_set_bus_num(CONFIG_SYS_I2C_EEPROM_BUS);
 #endif
 
-	//if (read)
-		//ret = i2c_read(addr[0], offset, alen - 1, buffer, len);
-	//else
-		//ret = i2c_write(addr[0], offset, alen - 1, buffer, len);
+	if (read)
+		ret = i2c_read(addr[0], offset, alen - 1, buffer, len);
+	else
+		ret = i2c_write(addr[0], offset, alen - 1, buffer, len);
 
 	if (ret)
 		ret = 1;
