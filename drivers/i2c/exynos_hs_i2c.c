@@ -147,7 +147,7 @@ static int hsi2c_get_clk_details(struct s3c24x0_i2c_bus *i2c_bus)
 #if (defined CONFIG_EXYNOS4 || defined CONFIG_EXYNOS5)
 	clkin = get_i2c_clk();
 #else
-	clkin = get_PCLK();
+	clkin = samsung_get_base_clock();
 #endif
 	/* FPCLK / FI2C =
 	 * (CLK_DIV + 1) * (TSCLK_L + TSCLK_H + 2) + 8 + 2 * FLT_CYCLE
@@ -525,14 +525,14 @@ static int s3c_i2c_ofdata_to_platdata(struct udevice *dev)
 
 	i2c_bus->hsregs = (struct exynos5_hsi2c *)devfdt_get_addr(dev);
 
-	i2c_bus->id = pinmux_decode_periph_id(blob, node);
+	//i2c_bus->id = pinmux_decode_periph_id(blob, node);
 
 	i2c_bus->clock_frequency = fdtdec_get_int(blob, node,
 						  "clock-frequency", 100000);
 	i2c_bus->node = node;
 	i2c_bus->bus_num = dev->seq;
 
-	exynos_pinmux_config(i2c_bus->id, PINMUX_FLAG_HS_MODE);
+	//exynos_pinmux_config(i2c_bus->id, PINMUX_FLAG_HS_MODE);
 
 	i2c_bus->active = true;
 

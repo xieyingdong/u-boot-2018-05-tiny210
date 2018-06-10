@@ -15,6 +15,7 @@
 	aliases {
 		u-boot,dm-pre-reloc;
 		console = "/serial@e29000000";
+		i2c0 = &i2c_0;
 	};
 
 	serial@e2900000 {
@@ -50,6 +51,18 @@
                         gpios = <&gpj2 3 1>;
                 };
         };
+	i2c_0: i2c@e1800000 {
+                compatible = "samsung,s3c2440-i2c";
+                #address-cells = <1>;
+                #size-cells = <0>;
+                reg = <0xe1800000 0x100>;
+		at24@50 {
+			compatible = "atmel,24c08a";
+			reg = <0x50>;
+		};
+
+        };
+
 
 	demo0 {
 		compatible = "demo-simple";

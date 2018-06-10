@@ -13,7 +13,7 @@
 #include <asm/arch/cpu.h>
 #include <asm/arch/pinmux.h>
 #else
-#include <asm/arch/s3c24x0_cpu.h>
+#include <asm/arch/cpu.h>
 #endif
 #include <asm/io.h>
 #include <i2c.h>
@@ -56,29 +56,30 @@ static void read_write_byte(struct s3c24x0_i2c *i2c)
 
 static void i2c_ch_init(struct s3c24x0_i2c *i2c, int speed, int slaveadd)
 {
-	ulong freq, pres = 16, div;
+	//ulong freq, pres = 16, div;
 #if (defined CONFIG_EXYNOS4 || defined CONFIG_EXYNOS5)
-	freq = get_i2c_clk();
+	//freq = get_i2c_clk();
 #else
-	freq = get_PCLK();
+	//freq = get_PCLK();
 #endif
 	/* calculate prescaler and divisor values */
-	if ((freq / pres / (16 + 1)) > speed)
+	//if ((freq / pres / (16 + 1)) > speed)
 		/* set prescaler to 512 */
-		pres = 512;
+	//	pres = 512;
 
-	div = 0;
-	while ((freq / pres / (div + 1)) > speed)
-		div++;
+	//div = 0;
+	//while ((freq / pres / (div + 1)) > speed)
+	//	div++;
 
 	/* set prescaler, divisor according to freq, also set ACKGEN, IRQ */
-	writel((div & 0x0F) | 0xA0 | ((pres == 512) ? 0x40 : 0), &i2c->iiccon);
+	writel(0xE0, &i2c->iiccon);
 
 	/* init to SLAVE REVEIVE and set slaveaddr */
 	writel(0, &i2c->iicstat);
 	writel(slaveadd, &i2c->iicadd);
 	/* program Master Transmit (and implicit STOP) */
 	writel(I2C_MODE_MT | I2C_TXRX_ENA, &i2c->iicstat);
+	printf("Enter : %s\n", __func__);
 }
 
 static int s3c24x0_i2c_set_bus_speed(struct udevice *dev, unsigned int speed)
@@ -293,13 +294,16 @@ static int s3c24x0_i2c_xfer(struct udevice *dev, struct i2c_msg *msg,
 
 	for (ret = 0, i = 0; !ret && i < nmsgs; i++)
 		ret = s3c24x0_do_msg(i2c_bus, &msg[i], i);
-
 	/* Send STOP */
 	writel(I2C_MODE_MR | I2C_TXRX_ENA, &i2c->iicstat);
 	read_write_byte(i2c);
 
 	return ret ? -EREMOTEIO : 0;
 }
+
+//GPIO寄存器--GPD1共用
+#define GPD1CON         (*((volatile unsigned int *)0xE02000C0))
+#define GPD1PUD         (*((volatile unsigned int *)0xE02000C8))
 
 static int s3c_i2c_ofdata_to_platdata(struct udevice *dev)
 {
@@ -311,14 +315,19 @@ static int s3c_i2c_ofdata_to_platdata(struct udevice *dev)
 
 	i2c_bus->regs = (struct s3c24x0_i2c *)devfdt_get_addr(dev);
 
-	i2c_bus->id = pinmux_decode_periph_id(blob, node);
+	//i2c_bus->id = pinmux_decode_periph_id(blob, node);
 
 	i2c_bus->clock_frequency = fdtdec_get_int(blob, node,
 						  "clock-frequency", 100000);
 	i2c_bus->node = node;
 	i2c_bus->bus_num = dev->seq;
 
-	exynos_pinmux_config(i2c_bus->id, 0);
+	//exynos_pinmux_config(i2c_bus->id, 0);
+	//1.设置引脚-I2C复用
+	GPD1CON &= ~(0xFF <<0);
+	GPD1CON |= (0x22 <<0);
+	//设定引脚上拉，但是原理图上已经加了上拉电阻，所以直接悬空就可以了
+	GPD1PUD &= ~(0xF);
 
 	i2c_bus->active = true;
 

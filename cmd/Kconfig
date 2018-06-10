@@ -450,6 +450,11 @@ config CMD_EEPROM
 	  Programmable Read Only Memory) chips that are connected over an
 	  I2C bus.
 
+config CMD_AT24C08
+	bool "at24c08 - eeprom subsystem"
+	help
+	  test at24c08.
+
 config CMD_EEPROM_LAYOUT
 	bool "Enable layout-aware eeprom commands"
 	depends on CMD_EEPROM
